@@ -1,6 +1,8 @@
 package com.salimrahmani.strava.service;
 
+import com.salimrahmani.strava.converter.RunConverter;
 import com.salimrahmani.strava.dto.ReportDTO;
+import com.salimrahmani.strava.dto.RunDTO;
 import com.salimrahmani.strava.exception.BusinessException;
 import com.salimrahmani.strava.model.Run;
 import com.salimrahmani.strava.repository.RunRepository;
@@ -16,7 +18,12 @@ public class RunService {
     @Autowired
     private RunRepository runRepository;
 
-    public Run save(Run run) {
+    @Autowired
+    private RunConverter runConverter;
+
+    public Run save(RunDTO runDTO) {
+
+        Run run = runConverter.convertToModel(runDTO);
 
         if (run.getEnd().isBefore(run.getStart())) {
             throw new BusinessException("error.business_exception.endDate_before_startDate", new Object[]{});
@@ -26,8 +33,6 @@ public class RunService {
     }
 
     public ReportDTO generateStats(LocalDateTime start, LocalDateTime end) {
-
-        // Get all runs in range.
         List<Run> runs = runRepository.findByStartGreaterThanEqualAndEndLessThanEqual(start, end);
 
         return new ReportDTO(getAverageKms(runs), getAverageCals(runs));
@@ -39,7 +44,6 @@ public class RunService {
                 .average()
                 .orElse(Double.NaN);
     }
-
 
     private double getAverageCals(List<Run> runs) {
         return runs.stream()

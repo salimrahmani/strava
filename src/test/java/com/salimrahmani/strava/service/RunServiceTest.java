@@ -1,6 +1,8 @@
 package com.salimrahmani.strava.service;
 
+import com.salimrahmani.strava.converter.RunConverter;
 import com.salimrahmani.strava.dto.ReportDTO;
+import com.salimrahmani.strava.dto.RunDTO;
 import com.salimrahmani.strava.exception.BusinessException;
 import com.salimrahmani.strava.model.Run;
 import com.salimrahmani.strava.repository.RunRepository;
@@ -26,6 +28,9 @@ public class RunServiceTest {
     @Mock
     private RunRepository runRepository;
 
+    @Mock
+    private RunConverter runConverter;
+
     @InjectMocks
     private RunService runService;
 
@@ -33,6 +38,8 @@ public class RunServiceTest {
     public void should_create_a_new_run() {
 
         // Given
+        RunDTO runDTO = new RunDTO();
+
         Run run = Run.builder()
                 .start(LocalDateTime.of(2019, 1, 1, 6, 0))
                 .end(LocalDateTime.of(2019, 1, 1, 7, 30))
@@ -40,10 +47,13 @@ public class RunServiceTest {
                 .calories(BigDecimal.valueOf(400))
                 .build();
 
+        when(runConverter.convertToModel(runDTO)).thenReturn(run);
+
         // When
-        Run savedRun = runService.save(run);
+        Run savedRun = runService.save(runDTO);
 
         // Then
+        verify(runConverter).convertToModel(runDTO);
         verify(runRepository).save(run);
 
     }
@@ -51,6 +61,8 @@ public class RunServiceTest {
     @Test(expected = BusinessException.class)
     public void should_throw_business_exception_when_end_date_is_before_start_date() {
         // Given
+        RunDTO runDTO = new RunDTO();
+
         Run run = Run.builder()
                 .start(LocalDateTime.of(2019, 1, 1, 7, 30))
                 .end(LocalDateTime.of(2019, 1, 1, 6, 0))
@@ -58,15 +70,16 @@ public class RunServiceTest {
                 .calories(BigDecimal.valueOf(400))
                 .build();
 
+        when(runConverter.convertToModel(runDTO)).thenReturn(run);
+
         // When
-        Run savedRun = runService.save(run);
+        Run savedRun = runService.save(runDTO);
 
     }
 
     @Test
     public void should_generate_stats() {
         // Given
-
         Run run1 = Run.builder()
                 .start(LocalDateTime.of(2019, 1, 1, 6, 0))
                 .end(LocalDateTime.of(2019, 1, 1, 7, 0))
