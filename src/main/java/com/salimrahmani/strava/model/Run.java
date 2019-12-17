@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 @Entity
 public class Run {
 
@@ -41,6 +40,6 @@ public class Run {
     @NotNull
     @Positive
     @Column
-    private BigDecimal calories;
+    private BigDecimal cals;
 
 }

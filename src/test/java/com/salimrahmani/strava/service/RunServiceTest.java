@@ -1,6 +1,5 @@
 package com.salimrahmani.strava.service;
 
-import com.salimrahmani.strava.converter.RunConverter;
 import com.salimrahmani.strava.dto.ReportDTO;
 import com.salimrahmani.strava.dto.RunDTO;
 import com.salimrahmani.strava.exception.BusinessException;
@@ -12,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,7 +29,7 @@ public class RunServiceTest {
     private RunRepository runRepository;
 
     @Mock
-    private RunConverter runConverter;
+    private ModelMapper modelMapper;
 
     @InjectMocks
     private RunService runService;
@@ -40,20 +40,16 @@ public class RunServiceTest {
         // Given
         RunDTO runDTO = new RunDTO();
 
-        Run run = Run.builder()
-                .start(LocalDateTime.of(2019, 1, 1, 6, 0))
-                .end(LocalDateTime.of(2019, 1, 1, 7, 30))
-                .kms(BigDecimal.valueOf(5))
-                .calories(BigDecimal.valueOf(400))
-                .build();
-
-        when(runConverter.convertToModel(runDTO)).thenReturn(run);
+        Run run = new Run();
+        run.setStart(LocalDateTime.of(2019, 1, 1, 6, 0));
+        run.setEnd(LocalDateTime.of(2019, 1, 1, 7, 30));
+        run.setKms(BigDecimal.valueOf(5));
+        run.setCals(BigDecimal.valueOf(400));
 
         // When
-        Run savedRun = runService.save(runDTO);
+        Run savedRun = runService.save(run);
 
         // Then
-        verify(runConverter).convertToModel(runDTO);
         verify(runRepository).save(run);
 
     }
@@ -63,36 +59,31 @@ public class RunServiceTest {
         // Given
         RunDTO runDTO = new RunDTO();
 
-        Run run = Run.builder()
-                .start(LocalDateTime.of(2019, 1, 1, 7, 30))
-                .end(LocalDateTime.of(2019, 1, 1, 6, 0))
-                .kms(BigDecimal.valueOf(5))
-                .calories(BigDecimal.valueOf(400))
-                .build();
-
-        when(runConverter.convertToModel(runDTO)).thenReturn(run);
+        Run run = new Run();
+        run.setStart(LocalDateTime.of(2019, 1, 1, 7, 30));
+        run.setEnd(LocalDateTime.of(2019, 1, 1, 6, 0));
+        run.setKms(BigDecimal.valueOf(5));
+        run.setCals(BigDecimal.valueOf(400));
 
         // When
-        Run savedRun = runService.save(runDTO);
+        Run savedRun = runService.save(run);
 
     }
 
     @Test
     public void should_generate_stats() {
         // Given
-        Run run1 = Run.builder()
-                .start(LocalDateTime.of(2019, 1, 1, 6, 0))
-                .end(LocalDateTime.of(2019, 1, 1, 7, 0))
-                .kms(BigDecimal.valueOf(5))
-                .calories(BigDecimal.valueOf(300))
-                .build();
+        Run run1 = new Run();
+        run1.setStart(LocalDateTime.of(2019, 1, 1, 6, 0));
+        run1.setEnd(LocalDateTime.of(2019, 1, 1, 7, 0));
+        run1.setKms(BigDecimal.valueOf(5));
+        run1.setCals(BigDecimal.valueOf(300));
 
-        Run run2 = Run.builder()
-                .start(LocalDateTime.of(2019, 1, 1, 15, 0))
-                .end(LocalDateTime.of(2019, 1, 1, 16, 0))
-                .kms(BigDecimal.valueOf(8))
-                .calories(BigDecimal.valueOf(500))
-                .build();
+        Run run2 = new Run();
+        run2.setStart(LocalDateTime.of(2019, 1, 1, 15, 0));
+        run2.setEnd(LocalDateTime.of(2019, 1, 1, 16, 0));
+        run2.setKms(BigDecimal.valueOf(8));
+        run2.setCals(BigDecimal.valueOf(500));
 
         when(runRepository.findByStartGreaterThanEqualAndEndLessThanEqual(any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenReturn(Lists.list(run1, run2));
