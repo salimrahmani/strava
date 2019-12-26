@@ -1,11 +1,11 @@
 package com.salimrahmani.strava.model;
 
-import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -18,19 +18,20 @@ import java.time.LocalDateTime;
 @Entity
 public class Run {
 
-    @GeneratedValue
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "run_id")
     private Long id;
 
     @NotNull
     @Past
     @Column
-    private LocalDateTime start;
+    private LocalDateTime startDate;
 
     @NotNull
     @PastOrPresent
     @Column
-    private LocalDateTime end;
+    private LocalDateTime endDate;
 
     @NotNull
     @Positive

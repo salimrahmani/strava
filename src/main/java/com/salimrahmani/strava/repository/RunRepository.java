@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface RunRepository extends JpaRepository<Run, Long> {
 
-    List<Run> findByStartGreaterThanEqualAndEndLessThanEqual(LocalDateTime start, LocalDateTime end);
+    List<Run> findByStartDateGreaterThanEqualAndEndDateLessThanEqual(LocalDateTime startDate, LocalDateTime endDate);
 
 }

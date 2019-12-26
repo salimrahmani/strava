@@ -43,7 +43,7 @@ public class RunService {
 
     public Run save(Run run) {
 
-        if (run.getEnd().isBefore(run.getStart())) {
+        if (run.getEndDate().isBefore(run.getStartDate())) {
             throw new BusinessException("error.business_exception.endDate_before_startDate", new Object[]{});
         }
 
@@ -56,7 +56,7 @@ public class RunService {
             throw new BusinessException("error.business_exception.endDate_before_startDate", new Object[]{});
         }
 
-        List<Run> runs = runRepository.findByStartGreaterThanEqualAndEndLessThanEqual(start, end);
+        List<Run> runs = runRepository.findByStartDateGreaterThanEqualAndEndDateLessThanEqual(start, end);
 
         return new ReportDTO(getAverageKms(runs), getAverageCals(runs));
     }

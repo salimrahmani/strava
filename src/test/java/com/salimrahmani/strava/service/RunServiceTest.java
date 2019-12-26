@@ -41,8 +41,8 @@ public class RunServiceTest {
         RunDTO runDTO = new RunDTO();
 
         Run run = new Run();
-        run.setStart(LocalDateTime.of(2019, 1, 1, 6, 0));
-        run.setEnd(LocalDateTime.of(2019, 1, 1, 7, 30));
+        run.setStartDate(LocalDateTime.of(2019, 1, 1, 6, 0));
+        run.setEndDate(LocalDateTime.of(2019, 1, 1, 7, 30));
         run.setKms(BigDecimal.valueOf(5));
         run.setCals(BigDecimal.valueOf(400));
 
@@ -60,8 +60,8 @@ public class RunServiceTest {
         RunDTO runDTO = new RunDTO();
 
         Run run = new Run();
-        run.setStart(LocalDateTime.of(2019, 1, 1, 7, 30));
-        run.setEnd(LocalDateTime.of(2019, 1, 1, 6, 0));
+        run.setStartDate(LocalDateTime.of(2019, 1, 1, 7, 30));
+        run.setEndDate(LocalDateTime.of(2019, 1, 1, 6, 0));
         run.setKms(BigDecimal.valueOf(5));
         run.setCals(BigDecimal.valueOf(400));
 
@@ -74,18 +74,18 @@ public class RunServiceTest {
     public void should_generate_stats() {
         // Given
         Run run1 = new Run();
-        run1.setStart(LocalDateTime.of(2019, 1, 1, 6, 0));
-        run1.setEnd(LocalDateTime.of(2019, 1, 1, 7, 0));
+        run1.setStartDate(LocalDateTime.of(2019, 1, 1, 6, 0));
+        run1.setEndDate(LocalDateTime.of(2019, 1, 1, 7, 0));
         run1.setKms(BigDecimal.valueOf(5));
         run1.setCals(BigDecimal.valueOf(300));
 
         Run run2 = new Run();
-        run2.setStart(LocalDateTime.of(2019, 1, 1, 15, 0));
-        run2.setEnd(LocalDateTime.of(2019, 1, 1, 16, 0));
+        run2.setStartDate(LocalDateTime.of(2019, 1, 1, 15, 0));
+        run2.setEndDate(LocalDateTime.of(2019, 1, 1, 16, 0));
         run2.setKms(BigDecimal.valueOf(8));
         run2.setCals(BigDecimal.valueOf(500));
 
-        when(runRepository.findByStartGreaterThanEqualAndEndLessThanEqual(any(LocalDateTime.class), any(LocalDateTime.class)))
+        when(runRepository.findByStartDateGreaterThanEqualAndEndDateLessThanEqual(any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenReturn(Lists.list(run1, run2));
 
         // When
